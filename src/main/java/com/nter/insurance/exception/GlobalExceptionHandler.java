@@ -1,6 +1,7 @@
 package com.nter.insurance.exception;
 
 import com.nter.insurance.dto.ErrorResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -22,6 +23,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyExists(AlreadyExistsException ex) {
         return build(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolation(DataIntegrityViolationException ex) {
+        return build(HttpStatus.CONFLICT, "The data conflicts with an existing record");
     }
 
     @ExceptionHandler(InvalidDataException.class)

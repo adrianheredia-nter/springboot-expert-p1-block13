@@ -2,6 +2,7 @@ package com.nter.insurance.controller;
 
 import com.nter.insurance.dto.PolicyResponse;
 import com.nter.insurance.exception.InvalidDataException;
+import org.springframework.dao.DataIntegrityViolationException;
 import com.nter.insurance.service.PolicyService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,19 @@ class PolicyControllerTest {
         mockMvc.perform(get("/api/policies/1"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Bad Request"));
+    }
+
+    @Test
+    void createReturnsConflictWhenDatabaseRejectsDuplicate() throws Exception {
+        when(policyService.create(any())).thenThrow(new DataIntegrityViolationException("unique constraint"));
+
+        mockMvc.perform(post("/api/policies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"numPolicy": "POL-0001", "branch": "life", "idClient": 2}
+                                """))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value("The data conflicts with an existing record"));
     }
 
     @Test
