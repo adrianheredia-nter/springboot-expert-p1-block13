@@ -29,13 +29,13 @@ public class PolicyJPA {
     @Column(name = "id_policy")
     private Integer idPolicy;
 
-    @Column(name = "num_policy", nullable = false, unique = true)
+    @Column(name = "num_policy", nullable = false, unique = true, length = 50)
     private String numPolicy;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String branch;
 
-    @Column(name = "sub_branch")
+    @Column(name = "sub_branch", length = 100)
     private String subBranch;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

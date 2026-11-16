@@ -32,10 +32,10 @@ public class ClientJPA {
     @Column(nullable = false, unique = true, length = 9)
     private String dni;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String surname;
 
     private LocalDate birthdate;

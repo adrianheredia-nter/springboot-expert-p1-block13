@@ -115,6 +115,17 @@ class ClientControllerTest {
     }
 
     @Test
+    void createRejectsTooLongName() throws Exception {
+        ClientRequest request = new ClientRequest(4, "11111111H", "A".repeat(101), "Lopez", BIRTHDATE);
+
+        mockMvc.perform(post("/api/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("name size must be between 0 and 100"));
+    }
+
+    @Test
     void createRejectsMalformedJson() throws Exception {
         mockMvc.perform(post("/api/clients")
                         .contentType(MediaType.APPLICATION_JSON)
